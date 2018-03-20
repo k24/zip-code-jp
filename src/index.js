@@ -1,5 +1,3 @@
-import fs from 'fs';
-import path from 'path';
 import { Promise } from 'bluebird';
 import { CacheManager, MemoryCacheAdapter, CacheAdapter } from './cache';
 import { CacheableDictionaryLoader, DictionaryLoader } from './dictionary-loader';
@@ -14,8 +12,6 @@ export const dict = {
   DictionaryLoader: DictionaryLoader,
   CacheableDictionaryLoader: CacheableDictionaryLoader
 };
-
-const readFile = Promise.promisify(fs.readFile);
 
 export default class AddressResolver {
   constructor(adapter = new MemoryCacheAdapter()) {

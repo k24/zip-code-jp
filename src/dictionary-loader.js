@@ -1,9 +1,5 @@
-import fs from 'fs';
-import path from 'path';
 import { Promise } from 'bluebird';
 import { CacheManager } from './cache';
-
-const readFile = Promise.promisify(fs.readFile);
 
 export class DictionaryLoader {
   /**
@@ -41,17 +37,15 @@ export class CacheableDictionaryLoader extends DictionaryLoader {
     return this.cacheManager.find(prefix);
   }
   loadAddressDictionaryFromFile(prefix) {
-    const file = path.join(__dirname, '/../json', 'zip-' + prefix + '.json');
+    return new Promise((resolve, reject) => {
+      const dict = require('../json/'+ 'zip-' + prefix + '.json');
 
-    return readFile(file).then((content) => {
-      let dict = null;
       try {
-        dict = JSON.parse(content);
+        this.cacheManager.store(prefix, dict);
+        resolve(dict);
       } catch (err) {
-        return Promise.reject(err);
+        reject(err);
       }
-      const returnValue = () => Promise.resolve(dict);
-      return this.cacheManager.store(prefix, dict).then(returnValue);
     });
   }
 }
